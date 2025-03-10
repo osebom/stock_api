@@ -1,0 +1,59 @@
+# Name of our automation recipe - what this workflow does
+name: CI/CD Pipeline
+
+# When should this recipe run?
+on:
+  push:
+    branches: [ main ]     # Run when someone pushes code to main branch
+  pull_request:
+    branches: [ main ]     # Run when someone opens a pull request to main
+
+# List of tasks our automation will do
+jobs:
+  # First Job: Testing our code 🧪
+  test:
+    runs-on: ubuntu-latest   # Use Ubuntu as our testing kitchen
+    
+    steps:                   # Step by step instructions
+    # Step 1: Get our code (like getting ingredients ready)
+    - uses: actions/checkout@v2    
+    
+    # Step 2: Set up Python (like preheating the oven)
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'     # Which Python version to use
+    
+    # Step 3: Install required packages (like gathering ingredients)
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt    # Install project requirements
+        pip install pytest                 # Install testing tool
+    
+    # Step 4: Run our tests (like taste testing the recipe)
+    - name: Run tests
+      run: |
+        pytest tests/test_api_service.py -v    # Run tests with detailed output
+
+  # Second Job: Deploying our code 🚀
+  deploy:
+    needs: test                  # Only deploy if tests pass (like serving only if taste test passes)
+    runs-on: ubuntu-latest      # Use Ubuntu for deployment too
+    if: github.ref == 'refs/heads/main'  # Only deploy when we're on main branch
+    
+    steps:
+    # Step 1: Deploy to Render (like serving to customers)
+    - name: Deploy to Render
+      env:
+        # Secret key to access Render (like having the restaurant's key)
+        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      run: |
+        # Actual deployment commands will replace this echo
+        echo "Deploying to Render..."
+
+# This workflow will:
+# 1. Run automatically on push/PR to main
+# 2. Test our code thoroughly
+# 3. If tests pass and we're on main, deploy to Render
+# 4. Stop if any step fails (like stopping cooking if something burns) 
