@@ -1,0 +1,19 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+stock_env/
+
+# Environment variables
+.env
+
+# IDE and editor files
+.vscode/
+
+# Log files
+*.log
+
+# Other temporary files
+*.tmp
