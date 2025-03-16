@@ -4,24 +4,28 @@ FROM python:3.9-slim
 # 2. Create and cd into /app directory
 WORKDIR /app
 
-# 3. Copy requirements.txt from your computer to container's /app folder
-COPY requirements.txt .
-# Your Computer         Docker Container
-# requirements.txt  →   /app/requirements.txt
+# 3. Install virtualenv
+RUN pip install --no-cache-dir virtualenv
 
-# 4. Install all packages from requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# 4. Create a virtual environment
+RUN virtualenv venv
 
-# 5. Copy your app folder contents to container's /app folder. # Copy everything, not just /app folder
+# 5. Activate the virtual environment and install dependencies
+RUN . venv/bin/activate && \
+    pip install --no-cache-dir -r requirements.txt
+
+# 6. Copy your app folder contents to container's /app folder
 COPY . .    
 
-# 6. Make sure Python can find our app
+# 7. Make sure Python can find our app
 ENV PYTHONPATH=/app
 
-# 7. Run the FastAPI app using uvicorn
-# ${PORT:-8000} means: use the PORT environment variable if it exists, else use 8000
-# This makes our app work both locally (8000) and on Render (where PORT is set automatically)
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# 8. Set the entry point to use the virtual environment
+# This command starts the Uvicorn server to run the FastAPI application.
+# It uses the 'uvicorn' executable from the virtual environment 'venv',
+# allowing the app to run on all network interfaces (0.0.0.0) and listens
+# on the specified PORT (default is 8000 if not set).
+CMD ["venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "${PORT:-8000}"]
 #   │       │    │       │     │         │     └── Default port if PORT not set
 #   │       │    │       │     │         └── Use environment variable PORT
 #   │       │    │       │     └── Accept connections from anywhere

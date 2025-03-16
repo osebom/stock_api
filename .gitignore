@@ -5,15 +5,25 @@ __pycache__/
 
 # Virtual environment
 stock_env/
+venv/
+env/
+.env/
 
 # Environment variables
 .env
+.env.*
+!.env.example
 
 # IDE and editor files
 .vscode/
+.idea/
+*.swp
+*.swo
 
 # Log files
 *.log
+logs/
 
 # Other temporary files
 *.tmp
+.DS_Store
