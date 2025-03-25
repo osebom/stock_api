@@ -17,18 +17,30 @@ def test_get_valid_stock():
     assert response.status_code == 200
     data = response.json()
     
-    # Check structure of response
-    assert "ticker" in data
-    assert "current_price" in data
-    assert "company_name" in data
+    # Define core required fields and their expected types
+    required_fields = {
+        "ticker": str,
+        "current_price": (int, float),
+        "company_name": str,
+        "news": list
+    }
+    
+    # Check that all required fields are present and of correct type
+    for field, expected_type in required_fields.items():
+        assert field in data, f"Required field '{field}' is missing"
+        assert isinstance(data[field], expected_type), f"Field '{field}' has wrong type"
+    
+    # Check nested structures maintain their required format
     assert "performance" in data
+    performance = data["performance"]
+    assert all(key in performance for key in ["day_change", "year_high", "year_low"])
+    
     assert "dividend_info" in data
-    assert "news" in data
+    dividend_info = data["dividend_info"]
+    assert all(key in dividend_info for key in ["pays_dividend", "dividend_yield", "annual_dividend_rate", "last_dividend_date"])
 
-    # Check data types
-    assert isinstance(data["ticker"], str)
-    assert isinstance(data["current_price"], (int, float))
-    assert isinstance(data["news"], list)
+    # Additional fields are allowed without breaking the test
+    # No need to modify this test when adding new top-level fields
 
 def test_get_invalid_stock():
     """Test getting data for an invalid stock ticker"""
