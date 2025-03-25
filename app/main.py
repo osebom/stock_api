@@ -10,7 +10,7 @@ app = FastAPI(
 
 @app.get("/")
 async def root():
-    return {"message": "Hi! Stock API is running!"}
+    return {"message": "Stock API is running!"}
 
 @app.get("/stock/{ticker}", response_model=StockResponse)
 async def get_stock(ticker: str):
