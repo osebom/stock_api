@@ -45,6 +45,7 @@ def get_stock_data(ticker: str) -> Dict[str, Any]:
             "ticker": ticker.upper(),
             "current_price": info.get("currentPrice", 0),
             "company_name": company_name,
+            "country": info.get("country", "Unknown"),
             "currency": info.get("currency", "USD"),
             "sector": info.get("sector", "Unknown"),
             "performance": performance,
