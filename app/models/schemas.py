@@ -21,6 +21,7 @@ class StockResponse(BaseModel):
     ticker: str
     current_price: Optional[float] = None
     company_name: Optional[str] = None
+    country: Optional[str] = None
     currency: Optional[str] = None
     sector: Optional[str] = None
     performance: StockPerformance
