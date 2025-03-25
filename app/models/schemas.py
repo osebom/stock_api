@@ -22,6 +22,7 @@ class StockResponse(BaseModel):
     current_price: Optional[float] = None
     company_name: Optional[str] = None
     currency: Optional[str] = None
+    sector: Optional[str] = None
     performance: StockPerformance
     dividend_info: DividendInfo
     news: List[NewsItem] = []
